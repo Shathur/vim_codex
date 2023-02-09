@@ -54,7 +54,7 @@ def initialize_openai_api():
 
 def complete_input_max_length(input_prompt, max_input_length=MAX_SUPPORTED_INPUT_LENGTH, stop=None, max_tokens=64):
     input_prompt = input_prompt[-max_input_length:]
-    response = openai.Completion.create(engine='code-davinci-001', prompt=input_prompt, best_of=1, temperature=0.5, max_tokens=max_tokens, stream=USE_STREAM_FEATURE, stop=stop)
+    response = openai.Completion.create(engine='text-davinci-003', prompt=input_prompt, best_of=1, temperature=0.5, max_tokens=max_tokens, stream=USE_STREAM_FEATURE, stop=stop)
     return response
 
 def complete_input(input_prompt, stop, max_tokens):
@@ -139,6 +139,27 @@ def create_completion(stop=None):
         stop = get_first_line_below_cursor_with_text()
     response = complete_input(input_prompt, stop=stop, max_tokens=max_tokens)
     write_response(response, stop=stop)
+
+def create_selected_completion():
+    try:
+        from AUTH import ORGANIZATION_ID, SECRET_KEY
+        openai.organization = ORGANIZATION_ID
+        openai.api_key = SECRET_KEY
+    except ModuleNotFoundError:
+        initialize_openai_api()
+    max_tokens = get_max_tokens()
+    vim_selection = vim.eval('@"')
+    input_prompt = vim_selection
+    response = complete_input(
+        input_prompt=input_prompt,
+        stop=None,
+        max_tokens=max_tokens
+    )
+    write_response(
+        response=response,
+        stop=None
+    )
+
 
 def write_response(response, stop):
     vim_buf = vim.current.buffer

@@ -30,10 +30,15 @@ function! CreateCompletionLine()
   python3 plugin.create_completion(stop='\n')
 endfunction
 
+function! CreateSelectedCompletion(max_tokens)
+	python3 plugin.create_selected_completion()
+endfunction
+
 
 
 command! -nargs=? CreateCompletion call CreateCompletion(<q-args>)
 command! -nargs=0 CreateCompletionLine call CreateCompletionLine()
+command! -nargs=? CreateSelectedCompletion call CreateSelectedCompletion(<q-args>)
 
 map <Leader>co :CreateCompletion<CR>
 
