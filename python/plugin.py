@@ -54,7 +54,8 @@ def initialize_openai_api():
 
 def complete_input_max_length(input_prompt, max_input_length=MAX_SUPPORTED_INPUT_LENGTH, stop=None, max_tokens=64):
     input_prompt = input_prompt[-max_input_length:]
-    response = openai.Completion.create(engine='text-davinci-003', prompt=input_prompt, best_of=1, temperature=0.5, max_tokens=max_tokens, stream=USE_STREAM_FEATURE, stop=stop)
+    # at the moment text-davinci-003 seems to be more expensive from gpt-3.5-turbo
+    response = openai.Completion.create(engine='gpt-3.5-turbo', prompt=input_prompt, best_of=1, temperature=0.5, max_tokens=max_tokens, stream=USE_STREAM_FEATURE, stop=stop)
     return response
 
 def complete_input(input_prompt, stop, max_tokens):
